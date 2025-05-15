@@ -1,5 +1,6 @@
 import { ResponseInterface } from "../../Data/ResponseInterface";
 import { Param } from "../../Enum/Param";
+import { Response } from "../../Enum/Response";
 
 export class Sorter {
   public static readonly REQUEST_PARAM_ORDER: Param[] = [
@@ -29,25 +30,25 @@ export class Sorter {
     Param.LANG,
   ];
 
-  public static readonly RESPONSE_PARAM_ORDER: (Param | keyof ResponseInterface)[] = [
+  public static readonly RESPONSE_PARAM_ORDER: (Param | Response)[] = [
     Param.OPERATION,
     Param.ORDERNUMBER,
     Param.MERORDERNUM,
     Param.MD,
-    'PRCODE',
-    'SRCODE',
-    'RESULTTEXT',
+    Response.PRCODE,
+    Response.SRCODE,
+    Response.RESULTTEXT,
     Param.USERPARAM,
     Param.ADDINFO,
     Param.TOKEN,
-    'EXPIRY',
-    'ACSRES',
-    'ACCODE',
+    Response.EXPIRY,
+    Response.ACSRES,
+    Response.ACCODE,
     Param.PANPATTERN,
-    'DAYTOCAPTURE',
-    'TOKENREGSTATUS',
+    Response.DAYTOCAPTURE,
+    Response.TOKENREGSTATUS,
     Param.DIGEST,
-    'DIGEST1',
+    Response.DIGEST1,
   ];
 
   /**

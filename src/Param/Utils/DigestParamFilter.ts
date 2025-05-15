@@ -1,5 +1,6 @@
 import { ResponseInterface } from "../../Data/ResponseInterface";
 import { Param } from "../../Enum/Param";
+import { Response } from "../../Enum/Response";
 
 
 export class DigestParamsFilter {
@@ -12,7 +13,7 @@ export class DigestParamsFilter {
   /**
    * @var string[] DIGEST_PARAMS_KEYS
    */
-  public static readonly DIGEST_PARAMS_KEYS: (Param | keyof ResponseInterface)[] = [
+  public static readonly DIGEST_PARAMS_KEYS: (Param | Response)[] = [
     Param.MERCHANTNUMBER,
     Param.OPERATION,
     Param.ORDERNUMBER,
@@ -33,14 +34,14 @@ export class DigestParamsFilter {
     Param.FAST_TOKEN,
     Param.USERPARAM,
     Param.FASTPAYID,
-    'RESULTTEXT',
-    'SRCODE',
-    'PRCODE',
-    'EXPIRY',
-    'ACSRES',
-    'ACCODE',
-    'DAYTOCAPTURE',
-    'TOKENREGSTATUS',
+    Response.RESULTTEXT,
+    Response.SRCODE,
+    Response.PRCODE,
+    Response.EXPIRY,
+    Response.ACSRES,
+    Response.ACCODE,
+    Response.DAYTOCAPTURE,
+    Response.TOKENREGSTATUS,
   ];
 
   /**
