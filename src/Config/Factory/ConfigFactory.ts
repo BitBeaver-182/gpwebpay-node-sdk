@@ -35,7 +35,7 @@ export class ConfigFactory {
       // Single gateway config passed
       return {
         [gateway]: params,
-      };
+      } as Record<string, GatewayConfig>;
     }
 
     if (!(gateway in params)) {
