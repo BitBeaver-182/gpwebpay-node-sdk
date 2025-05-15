@@ -1,9 +1,10 @@
 import { InvalidArgumentException } from "./Exceptions/InvalidArgumentException";
 
 export function assertIsInteger(value: unknown, name: string): void {
+  const errorMessage = `${name} must be integer "${value}" given.`
   if (typeof value === 'number') {
     if (!Number.isInteger(value)) {
-      throw new InvalidArgumentException(`${name} must be an integer, "${value}" given.`);
+      throw new InvalidArgumentException(errorMessage);
     }
     return;
   }
@@ -15,7 +16,7 @@ export function assertIsInteger(value: unknown, name: string): void {
     }
   }
 
-  throw new InvalidArgumentException(`${name} must be an integer (number or string), "${value}" given.`);
+  throw new InvalidArgumentException(errorMessage);
 }
 
 export function assertMaxLength(value: string | number, length: number, name: string): void {
