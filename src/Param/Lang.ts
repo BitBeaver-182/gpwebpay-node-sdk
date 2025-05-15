@@ -1,30 +1,40 @@
 import { Param } from "../Enum/Param";
-import { assertMaxLength } from "../validators";
+import { assertLength } from "../validators";
 import { IParam } from "./IParam";
 
-export class MerchantNumber implements IParam {
+
+export class Lang implements IParam {
   private value: string;
 
   /**
-   * MerchantNumber constructor.
+   * Lang constructor.
    *
-   * @param value string
+   * @param value 
    * @throws InvalidArgumentException
    */
   constructor(value: string) {
-    assertMaxLength(value, 10, this.getParamName());
+    assertLength(value, 2, this.getParamName());
     this.value = value;
   }
 
+  /**
+   * @return string
+   */
   public getValue(): string {
     return this.value;
   }
 
+  /**
+   * @return string
+   */
   public toString(): string {
     return this.value;
   }
 
+  /**
+   * @return string
+   */
   public getParamName(): string {
-    return Param.MERCHANTNUMBER;
+    return Param.LANG;
   }
 }

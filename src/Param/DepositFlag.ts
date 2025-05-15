@@ -3,6 +3,7 @@ import { IParam } from './IParam';
 import { DepositFlag as DepositFlagEnum } from '../Enum/DepositFlag';
 import { Param } from '../Enum/Param';
 
+
 export class DepositFlag implements IParam {
   private value: DepositFlagEnum;
 
