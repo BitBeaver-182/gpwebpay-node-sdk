@@ -26,12 +26,12 @@ export class PaymentConfigProvider {
     return this.paymentConfigs[this.getGateway(gateway)].getUrl();
   }
 
-  getMerchantNumber(gateway: string | null = null): MerchantNumber {
-    return this.paymentConfigs[this.getGateway(gateway)].getMerchantNumber();
+  getMerchantNumber(gateway: string | null = null): string {
+    return this.paymentConfigs[this.getGateway(gateway)].getMerchantNumber().toString();
   }
 
-  getDepositFlag(gateway: string | null = null): DepositFlag {
-    return this.paymentConfigs[this.getGateway(gateway)].getDepositFlag();
+  getDepositFlag(gateway: string | null = null): string {
+    return this.paymentConfigs[this.getGateway(gateway)].getDepositFlag().toString();
   }
 
   getDefaultGateway(): string {

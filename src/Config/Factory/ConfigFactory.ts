@@ -34,7 +34,7 @@ export class ConfigFactory {
     if (ConfigFactory.PRIVATE_KEY in params) {
       // Single gateway config passed
       return {
-        [gateway]: params as GatewayConfig,
+        [gateway]: params,
       };
     }
 
@@ -58,6 +58,7 @@ export class ConfigFactory {
   private processParams(params: Record<string, GatewayConfig>, config: Config): void {
     const paymentConfigProvider = config.getPaymentConfigProvider();
     const signerConfigProvider = config.getSignerConfigProvider();
+
 
     for (const [gateway, data] of Object.entries(params)) {
       paymentConfigProvider.addPaymentConfig(
