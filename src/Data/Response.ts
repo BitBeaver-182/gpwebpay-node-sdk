@@ -81,9 +81,10 @@ export class Response implements ResponseInterface {
     const mdParam = this.params[Param.MD];
     if (!mdParam) return null;
 
-    const parts = String(mdParam).split('|', 2);
-    return parts[1] ?? null;
+    const explode = String(mdParam).split('|', 2);
+    return explode[1] ?? null;
   }
+
 
   public getOrderNumber(): string {
     return String(this.params[Param.ORDERNUMBER]);
@@ -107,9 +108,10 @@ export class Response implements ResponseInterface {
   }
 
   public hasError(): boolean {
-    return Boolean(this.params[ResponseEnum.PRCODE]?.getValue()) ||
-      Boolean(this.params[ResponseEnum.SRCODE]?.getValue());
+    return Number(this.params[ResponseEnum.PRCODE]?.getValue()) !== 0 ||
+      Number(this.params[ResponseEnum.SRCODE]?.getValue()) !== 0;
   }
+
 
   public addParam(param: IParam): void {
     this.params[param.getParamName()] = param;
