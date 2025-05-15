@@ -36,7 +36,7 @@ export class Email implements IParam {
    * @throws InvalidArgumentException 
    */
   protected validate(value: string): void {
-    assertIsEmail(value);
     assertMaxLength(value, 255, 'EMAIL');
+    assertIsEmail(value);
   }
 }
