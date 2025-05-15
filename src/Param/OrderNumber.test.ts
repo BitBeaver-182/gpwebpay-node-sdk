@@ -3,6 +3,7 @@ import { Param } from '../Enum/Param';
 import { InvalidArgumentException } from '../Exceptions/InvalidArgumentException';
 import { OrderNumber } from './OrderNumber';
 import { faker } from '@faker-js/faker';
+import { generateIntegerString } from 'tests/helpers/numeric';
 
 describe('OrderNumber', () => {
   it('should create an OrderNumber instance correctly', () => {
@@ -26,7 +27,7 @@ describe('OrderNumber', () => {
   );
 
   it('should throw InvalidArgumentException for a too long value', () => {
-    const longValue = faker.string.numeric({ length: 16 })
+    const longValue = generateIntegerString(16)
     expect(() => new OrderNumber(longValue)).toThrowError(InvalidArgumentException);
     expect(() => new OrderNumber(longValue))
       .toThrowError(`ORDERNUMBER max. length is 15! "${longValue.length}" given.`);

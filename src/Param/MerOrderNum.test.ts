@@ -3,11 +3,8 @@ import { Param } from '../Enum/Param';
 import { InvalidArgumentException } from '../Exceptions/InvalidArgumentException';
 import { MerOrderNum } from './MerOrderNum';
 import { faker } from '@faker-js/faker';
+import { generateIntegerString } from "tests/helpers/numeric"
 
-/**
- * Test for MerOrderNum parameter
- * @author  Ondra Votava <ondra@votava.dev>
- */
 describe('MerOrderNum', () => {
   test('should successfully create MerOrderNum param', () => {
     const merOrderNum = new MerOrderNum(123455);
@@ -29,7 +26,7 @@ describe('MerOrderNum', () => {
   });
 
   test('should throw exception for too long value', () => {
-    const longValue = faker.string.numeric({ length: 31 })
+    const longValue = generateIntegerString(31)
     expect(() => {
       new MerOrderNum(longValue);
     }).toThrow(InvalidArgumentException);
@@ -39,7 +36,7 @@ describe('MerOrderNum', () => {
   });
 
   test('should throw exception for invalid scalar value', () => {
-    const invalidString = faker.string.alphanumeric({ length: 4 })
+    const invalidString = faker.string.alpha({ length: 4 })
     expect(() => {
       new MerOrderNum(invalidString);
     }).toThrow(InvalidArgumentException);
