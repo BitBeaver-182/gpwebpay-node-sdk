@@ -1,5 +1,5 @@
 import { Param } from "../Enum/Param";
-import { assertLength } from "../validators";
+import { assertMaxLength } from "../validators";
 import { IParam } from "./IParam";
 
 
@@ -13,7 +13,7 @@ export class Lang implements IParam {
    * @throws InvalidArgumentException
    */
   constructor(value: string) {
-    assertLength(value, 2, this.getParamName());
+    assertMaxLength(value, 2, this.getParamName());
     this.value = value;
   }
 
