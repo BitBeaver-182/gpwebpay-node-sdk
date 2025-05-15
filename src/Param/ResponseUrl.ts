@@ -23,7 +23,7 @@ export class ResponseUrl implements IParam {
   }
 
   protected validate(value: string): void {
-    assertMaxLength(value, 300, 'URL');
+    assertMaxLength(value, 300, this.getParamName());
     assertUrl(value);
   }
 }

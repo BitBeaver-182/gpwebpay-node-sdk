@@ -50,6 +50,6 @@ export function assertUrl(url: string): void {
   const regex = /^(?:(?:https?|ftp):\/\/)(?:[^\s:@\/?#]+(?::[^\s:@\/?#]*)?@)?(?:[\p{L}\p{N}\p{M}\-._~%]+(?:\.[\p{L}\p{N}\p{M}\-._~%]+)*|\[[\dA-Fa-f:.]+\])(?::\d{2,5})?(?:\/[^\s?#]*)?(?:\?[^\s#]*)?(?:#[^\s]*)?$/u;
 
   if (!regex.test(url)) {
-    throw new InvalidArgumentException(`EMAIL is not valid! "${url}" given.`);
+    throw new InvalidArgumentException(`URL is Invalid.`);
   }
 }
