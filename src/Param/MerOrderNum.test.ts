@@ -3,7 +3,7 @@ import { Param } from '../Enum/Param';
 import { InvalidArgumentException } from '../Exceptions/InvalidArgumentException';
 import { MerOrderNum } from './MerOrderNum';
 import { faker } from '@faker-js/faker';
-import { generateIntegerString } from "tests/helpers/numeric"
+import { generateIntegerString } from "@tests/helpers/numeric"
 
 describe('MerOrderNum', () => {
   test('should successfully create MerOrderNum param', () => {

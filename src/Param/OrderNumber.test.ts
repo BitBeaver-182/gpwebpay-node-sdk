@@ -3,7 +3,7 @@ import { Param } from '../Enum/Param';
 import { InvalidArgumentException } from '../Exceptions/InvalidArgumentException';
 import { OrderNumber } from './OrderNumber';
 import { faker } from '@faker-js/faker';
-import { generateIntegerString } from 'tests/helpers/numeric';
+import { generateIntegerString } from '@tests/helpers/numeric';
 
 describe('OrderNumber', () => {
   it('should create an OrderNumber instance correctly', () => {

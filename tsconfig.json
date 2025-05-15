@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["./src/*"],
-      "tests/*": ["./tests/*"]
+      "@tests/*": ["./tests/*"]
     }
   },
   "include": ["src"]
