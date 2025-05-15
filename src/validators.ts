@@ -1,13 +1,21 @@
 import { InvalidArgumentException } from "./Exceptions/InvalidArgumentException";
 
 export function assertIsInteger(value: unknown, name: string): void {
-  if (typeof value !== 'number' || isNaN(value)) {
-    throw new InvalidArgumentException(`${name} must be a numeric type, "${typeof value}" given.`);
+  if (typeof value === 'number') {
+    if (!Number.isInteger(value)) {
+      throw new InvalidArgumentException(`${name} must be an integer, "${value}" given.`);
+    }
+    return;
   }
 
-  if (!/^[1-9]\d*$/.test(String(value))) {
-    throw new InvalidArgumentException(`${name} must be an integer, "${value}" given.`);
+  if (typeof value === 'string') {
+    // Matches positive, negative, and zero integers
+    if (/^-?(0|[1-9]\d*)$/.test(value)) {
+      return;
+    }
   }
+
+  throw new InvalidArgumentException(`${name} must be an integer (number or string), "${value}" given.`);
 }
 
 export function assertMaxLength(value: string | number, length: number, name: string): void {
@@ -29,7 +37,7 @@ export function assertLength(value: string | number, length: number, name: strin
  */
 export function assertIsEmail(value: string): void {
   // RFC 5322 compliant regex for email validation
-  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex = /^((?:[A-Za-z0-9!#$%&'*+\-\/=?^_`{|}~]|(?<=^|\.)"|"(?=$|\.|@)|(?<=".*)[ .](?=.*")|(?<!\.)\.){1,64})(@)((?:[A-Za-z0-9.\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/;
 
   if (!regex.test(value)) {
     throw new InvalidArgumentException(`EMAIL is not valid! "${value}" given.`);
@@ -38,9 +46,9 @@ export function assertIsEmail(value: string): void {
 
 
 export function assertUrl(url: string): void {
-  try {
-    new URL(url);
-  } catch {
-    throw new InvalidArgumentException('URL is Invalid.');
+  const regex = /^(?:(?:https?|ftp):\/\/)(?:[^\s:@\/?#]+(?::[^\s:@\/?#]*)?@)?(?:[\p{L}\p{N}\p{M}\-._~%]+(?:\.[\p{L}\p{N}\p{M}\-._~%]+)*|\[[\dA-Fa-f:.]+\])(?::\d{2,5})?(?:\/[^\s?#]*)?(?:\?[^\s#]*)?(?:#[^\s]*)?$/u;
+
+  if (!regex.test(url)) {
+    throw new InvalidArgumentException(`EMAIL is not valid! "${url}" given.`);
   }
 }
