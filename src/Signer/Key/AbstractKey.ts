@@ -3,8 +3,6 @@ import { KeyObject } from 'crypto';
 import { InvalidArgumentException } from '../../Exceptions/InvalidArgumentException';
 import { SignerException } from '../../Exceptions/SignerException';
 
-
-
 export abstract class AbstractKey {
   protected key: KeyObject | null = null;
 
