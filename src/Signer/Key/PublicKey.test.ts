@@ -1,0 +1,38 @@
+import { describe, it, expect, vi } from 'vitest';
+import { PublicKey } from '../../../src/Signer/Key/PublicKey';
+import path from 'path';
+
+const certPath = path.join(__dirname, '../../../tests/_certs/test-pub.pem');
+
+describe('PublicKey', () => {
+  it('creates a public key successfully', () => {
+    try {
+      new PublicKey(certPath);
+      // If no error is thrown, test passes
+    } catch (error) {
+      expect(error).toBeUndefined();
+    }
+  });
+
+  it('returns the same key on multiple getKey() calls (cached)', () => {
+    const publicKey = new PublicKey(certPath);
+
+    const key1 = publicKey.getKey();
+    const key2 = publicKey.getKey();
+
+    expect(key1).toBe(key2); // checks object identity
+  });
+
+  it('throws if content is invalid public key', () => {
+    const file = certPath;
+
+    const badKey = new PublicKey(file);
+
+    // Mock getContent to return invalid data
+    vi.spyOn(badKey as any, 'getContent').mockReturnValue('');
+
+    expect(() => badKey.getKey()).toThrowError(
+      `"${file}" is not a valid public key.`
+    );
+  });
+});
