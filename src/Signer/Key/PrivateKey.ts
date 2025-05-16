@@ -1,10 +1,6 @@
-import { readFileSync } from 'fs';
 import { createPrivateKey, KeyObject } from 'crypto';
 import { SignerException } from '../../Exceptions/SignerException';
 import { AbstractKey } from './AbstractKey';
-
-
-
 
 export class PrivateKey extends AbstractKey {
   constructor(file: string, private readonly password: string) {
