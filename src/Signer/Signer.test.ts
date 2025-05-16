@@ -1,8 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import path from 'path';
 import { PrivateKey } from './Key/PrivateKey';
 import { PublicKey } from './Key/PublicKey';
 import { Signer } from './Signer';
+import { SignerException } from '@/Exceptions/SignerException';
+import { KeyObject } from 'crypto';
 
 const privateKeyPath = path.join(__dirname, '../../tests/_certs/test.pem');
 const publicKeyPath = path.join(__dirname, '../../tests/_certs/test-pub.pem');
@@ -53,6 +55,57 @@ describe('Signer', () => {
     );
 
     const result = signer.verify(params, 'badhash');
+
+    expect(result).toBe(false);
+  });
+
+  it('throws SignerException when signing fails', () => {
+    const fakeKey = {} as KeyObject; // Invalid key object
+    const mockPrivateKey = {
+      getKey: vi.fn(() => {
+        throw new Error('Bad key');
+      }),
+    } as unknown as PrivateKey;
+
+    const mockPublicKey = {
+      getKey: vi.fn(),
+    } as unknown as PublicKey;
+
+    const signer = new Signer(mockPrivateKey, mockPublicKey);
+
+    expect(() =>
+      signer.sign({
+        AMOUNT: '100',
+        ORDERNUMBER: '123456',
+      })
+    ).toThrowError(new SignerException('Unable to sign data'));
+  });
+
+  it('returns false when verification fails', () => {
+    const realPrivateKey = vi.fn(() => {
+      throw new Error('never called');
+    });
+
+    const mockPublicKey = {
+      getKey: vi.fn(() => {
+        // Pass a dummy but structurally valid key that fails verify
+        return {} as KeyObject;
+      }),
+    } as unknown as PublicKey;
+
+    const mockPrivateKey = {
+      getKey: realPrivateKey,
+    } as unknown as PrivateKey;
+
+    const signer = new Signer(mockPrivateKey, mockPublicKey);
+
+    const result = signer.verify(
+      {
+        AMOUNT: '100',
+        ORDERNUMBER: '123456',
+      },
+      'invalidbase64signature=='
+    );
 
     expect(result).toBe(false);
   });
