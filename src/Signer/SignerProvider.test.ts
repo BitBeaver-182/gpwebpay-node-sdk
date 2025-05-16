@@ -5,6 +5,8 @@ import { ConfigFactory } from '@/Config/Factory/ConfigFactory';
 import { PaymentConfigFactory } from '@/Config/Factory/PaymentConfigFactory';
 import path from 'path';
 
+const DEFAULT_GATEWAY = 'czk';
+
 const createConfig = () => {
   const factory = new ConfigFactory(new PaymentConfigFactory());
   return factory.create({
@@ -24,10 +26,21 @@ const createConfig = () => {
       [ConfigFactory.MERCHANT_NUMBER]: '123456780',
       [ConfigFactory.DEPOSIT_FLAG]: 1,
     }
-  }, 'czk')
+  }, DEFAULT_GATEWAY)
 }
 
 describe('SignerProvider', () => {
+
+  it('should return default provider if no params pass', () => {
+    const config = createConfig().getSignerConfigProvider();
+    const provider = new SignerProvider(new SignerFactory(), config);
+
+    const signerNoParams = provider.get();
+    const signerDefault = provider.get(DEFAULT_GATEWAY);
+
+
+    expect(signerNoParams).toBe(signerDefault);
+  });
 
   it('creates different signers for different currencies', () => {
     const config = createConfig().getSignerConfigProvider();
