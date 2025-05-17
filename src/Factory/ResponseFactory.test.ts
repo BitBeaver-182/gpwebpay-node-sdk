@@ -1,4 +1,3 @@
-// tests/ResponseFactory.test.ts
 import { Param } from '@/Enum/Param';
 import { createConfig } from '@tests/helpers/config';
 import { describe, it, expect } from 'vitest';
@@ -40,7 +39,17 @@ describe('ResponseFactory', () => {
     expect(response.getGatewayKey()).toBe('czk');
     expect(response.hasError()).toBe(true);
   });
+
+  it('should handle default value for getIntValue when parameter is missing', () => {
+    const factory = createResponseFactory();
+    const params = { ...getFullParams() };
+    delete params[ResponseEnum.PRCODE]; // Remove PRCODE to test default value
+    const response = factory.create(params);
+
+    expect(response.getPrcode()).toBe(1000); // Verify default value is used
+  });
 });
+
 
 /**
  * Simulates full parameters response
