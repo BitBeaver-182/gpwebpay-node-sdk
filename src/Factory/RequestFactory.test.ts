@@ -8,10 +8,11 @@ import { SignerFactory } from '@/Signer/SignerFactory';
 import { SignerProvider } from '@/Signer/SignerProvider';
 import { describe, expect, it } from 'vitest';
 import { RequestFactory } from './RequestFactory';
-import { createConfig } from '@tests/helpers/config';
+import { createConfig, createConfigWithResponseUrl, RESPONSE_URL_EXAMPLE } from '@tests/helpers/config';
 import { Currency } from '@/Param/Currency';
 import { Operation } from '@/Data/Operation';
 import { createOperation } from '@tests/helpers/data';
+import { Param } from '@/Enum/Param';
 
 describe('RequestFactory', () => {
   const createFactory = (): RequestFactory => {
@@ -54,4 +55,28 @@ describe('RequestFactory', () => {
     expect(() => factory.create(operation)).toThrow(LogicException);
     expect(() => factory.create(operation)).toThrow('You forgot to set up the response URL');
   });
+
+  it('should add response URL from config if not provided in operation', () => {
+    const config = createConfigWithResponseUrl();
+    const signerFactory = new SignerFactory();
+    const signerProvider = new SignerProvider(signerFactory, config.getSignerConfigProvider());
+    const factory = new RequestFactory(config.getPaymentConfigProvider(), signerProvider);
+
+    // Create an operation WITHOUT a RESPONSE_URL param
+    const operation = new Operation(
+      new OrderNumber('1234'),
+      new AmountInPennies(100000),
+      new Currency(CurrencyEnum.CZK)
+    );
+
+    // Sanity check: make sure it doesn't have RESPONSE_URL
+    expect(operation.getParam(Param.RESPONSE_URL)).toBeNull();
+
+    const request = factory.create(operation);
+    const params = request.getParams();
+
+    // Expect URL was added from config
+    expect(params['URL']).toBe(RESPONSE_URL_EXAMPLE);
+  });
+
 });
