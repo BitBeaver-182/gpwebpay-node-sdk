@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest",
-    "test:coverage": "vitest --coverage --reporter=json --outDir=coverage-json",
+    "test:coverage": "vitest --coverage",
     "lint": "biome lint ./src ./tests",
     "format:fix": "biome format --write ./src ./tests",
     "format": "biome format ./src ./tests"

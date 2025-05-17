@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'node',
     coverage: {
       provider: 'v8', // or 'istanbul'
-      reporter: ['text', 'json-summary', 'json', 'html'],
+      reporter: ['json'],
       thresholds: {
         lines: 96,
         branches: 95,
