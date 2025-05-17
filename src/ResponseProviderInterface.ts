@@ -1,7 +1,9 @@
 
 import { ResponseInterface } from './Data/ResponseInterface';
 import { GPWebPayException } from './Exceptions/GPWebPayException';
-// import { GPWebPayResultException } from './Exceptions/GPWebPayResultException';
+
+export type ResposeProviderErrorClosure = (exception: GPWebPayException, response: ResponseInterface) => void
+export type ResposeProviderSuccessClosure = (response: ResponseInterface) => void
 
 export interface ResponseProviderInterface {
   provide(response: ResponseInterface): ResponseInterface;
@@ -13,12 +15,12 @@ export interface ResponseProviderInterface {
   verifyPaymentResponse(response: ResponseInterface): boolean;
 
   /**
-   * @param {(exception: GPWebPayException, response: ResponseInterface) => void} closure signature: function(GPWebPayException $exception, ResponseInterface $response)
+   * @param {ResposeProviderErrorClosure} closure signature: function(GPWebPayException $exception, ResponseInterface $response)
    */
-  addOnError(closure: (exception: GPWebPayException, response: ResponseInterface) => void): this;
+  addOnError(closure: ResposeProviderErrorClosure): ResponseProviderInterface;
 
   /**
-   * @param {(response: ResponseInterface) => void} closure signature: function(ResponseInterface $response)
+   * @param {ResposeProviderSuccessClosure} closure signature: function(ResponseInterface $response)
    */
-  addOnSuccess(closure: (response: ResponseInterface) => void): this;
+  addOnSuccess(closure: ResposeProviderSuccessClosure): ResponseProviderInterface;
 }
