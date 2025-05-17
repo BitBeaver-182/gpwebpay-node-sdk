@@ -2,20 +2,19 @@ import { describe, it, expect } from "vitest";
 import { InvalidArgumentException } from "../../Exceptions/InvalidArgumentException";
 import { ConfigFactory } from "./ConfigFactory";
 import { PaymentConfigFactory } from "./PaymentConfigFactory";
+import { privateKey2Path, privateKeyPath, publicKey2Path, publicKeyPath } from "@tests/helpers/keys";
 
 const CZK = 'czk';
 const EUR = 'eur';
-
-const CERTS_PATH = `${__dirname}/_certs`;
 
 describe('ConfigFactory', () => {
   const factory = new ConfigFactory(new PaymentConfigFactory());
 
   it('creates config from single set of parameters', () => {
     const config = factory.create({
-      PRIVATE_KEY: `${CERTS_PATH}/test.pem`,
+      PRIVATE_KEY: privateKeyPath,
       PRIVATE_KEY_PASSPHRASE: '1234567',
-      PUBLIC_KEY: `${CERTS_PATH}/test-pub.pem`,
+      PUBLIC_KEY: publicKeyPath,
       URL: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
       MERCHANT_NUMBER: '123456789',
       DEPOSIT_FLAG: 1,
@@ -28,25 +27,25 @@ describe('ConfigFactory', () => {
     expect(configProvider.getDepositFlag()).toBe('1');
 
     const signerConfig = config.getSignerConfigProvider().getConfig();
-    expect(signerConfig.getPrivateKey()).toBe(`${CERTS_PATH}/test.pem`);
+    expect(signerConfig.getPrivateKey()).toBe(privateKeyPath);
     expect(signerConfig.getPrivateKeyPassword()).toBe('1234567');
-    expect(signerConfig.getPublicKey()).toBe(`${CERTS_PATH}/test-pub.pem`);
+    expect(signerConfig.getPublicKey()).toBe(publicKeyPath);
   });
 
   it('creates config from multiple gateways', () => {
     const config = factory.create({
       czk: {
-        PRIVATE_KEY: `${CERTS_PATH}/test.pem`,
+        PRIVATE_KEY: privateKeyPath,
         PRIVATE_KEY_PASSPHRASE: '1234567',
-        PUBLIC_KEY: `${CERTS_PATH}/test-pub.pem`,
+        PUBLIC_KEY: publicKeyPath,
         URL: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
         MERCHANT_NUMBER: '123456789',
         DEPOSIT_FLAG: 1,
       },
       eur: {
-        PRIVATE_KEY: `${CERTS_PATH}/test2.pem`,
+        PRIVATE_KEY: privateKey2Path,
         PRIVATE_KEY_PASSPHRASE: '12345678',
-        PUBLIC_KEY: `${CERTS_PATH}/test-pub2.pem`,
+        PUBLIC_KEY: publicKey2Path,
         URL: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
         MERCHANT_NUMBER: '123456780',
         DEPOSIT_FLAG: 0,
@@ -71,36 +70,36 @@ describe('ConfigFactory', () => {
     expect(provider.getDepositFlag(EUR)).toBe('0');
 
     const signerDefault = config.getSignerConfigProvider().getConfig();
-    expect(signerDefault.getPrivateKey()).toBe(`${CERTS_PATH}/test.pem`);
+    expect(signerDefault.getPrivateKey()).toBe(privateKeyPath);
     expect(signerDefault.getPrivateKeyPassword()).toBe('1234567');
-    expect(signerDefault.getPublicKey()).toBe(`${CERTS_PATH}/test-pub.pem`);
+    expect(signerDefault.getPublicKey()).toBe(publicKeyPath);
 
     const signerCzk = config.getSignerConfigProvider().getConfig(CZK);
-    expect(signerCzk.getPrivateKey()).toBe(`${CERTS_PATH}/test.pem`);
+    expect(signerCzk.getPrivateKey()).toBe(privateKeyPath);
     expect(signerCzk.getPrivateKeyPassword()).toBe('1234567');
-    expect(signerCzk.getPublicKey()).toBe(`${CERTS_PATH}/test-pub.pem`);
+    expect(signerCzk.getPublicKey()).toBe(publicKeyPath);
 
     const signerEur = config.getSignerConfigProvider().getConfig(EUR);
-    expect(signerEur.getPrivateKey()).toBe(`${CERTS_PATH}/test2.pem`);
+    expect(signerEur.getPrivateKey()).toBe(privateKey2Path);
     expect(signerEur.getPrivateKeyPassword()).toBe('12345678');
-    expect(signerEur.getPublicKey()).toBe(`${CERTS_PATH}/test-pub2.pem`);
+    expect(signerEur.getPublicKey()).toBe(publicKey2Path);
   });
 
   it('throws if default gateway is missing from config', () => {
     expect(() => {
       factory.create({
         czk: {
-          PRIVATE_KEY: `${CERTS_PATH}/test.pem`,
+          PRIVATE_KEY: privateKeyPath,
           PRIVATE_KEY_PASSPHRASE: '1234567',
-          PUBLIC_KEY: `${CERTS_PATH}/test-pub.pem`,
+          PUBLIC_KEY: publicKeyPath,
           URL: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
           MERCHANT_NUMBER: '123456789',
           DEPOSIT_FLAG: 1,
         },
         eur: {
-          PRIVATE_KEY: `${CERTS_PATH}/test2.pem`,
+          PRIVATE_KEY: privateKey2Path,
           PRIVATE_KEY_PASSPHRASE: '12345678',
-          PUBLIC_KEY: `${CERTS_PATH}/test-pub2.pem`,
+          PUBLIC_KEY: publicKey2Path,
           URL: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
           MERCHANT_NUMBER: '123456780',
           DEPOSIT_FLAG: 0,

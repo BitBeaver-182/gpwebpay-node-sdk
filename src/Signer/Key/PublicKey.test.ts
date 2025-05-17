@@ -1,13 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { PublicKey } from '../../../src/Signer/Key/PublicKey';
-import path from 'path';
-
-const certPath = path.join(__dirname, '../../../tests/_certs/test-pub.pem');
+import { publicKeyPath } from '@tests/helpers/keys';
+import { PublicKey } from './PublicKey';
 
 describe('PublicKey', () => {
   it('creates a public key successfully', () => {
     try {
-      new PublicKey(certPath);
+      new PublicKey(publicKeyPath);
       // If no error is thrown, test passes
     } catch (error) {
       expect(error).toBeUndefined();
@@ -15,7 +13,7 @@ describe('PublicKey', () => {
   });
 
   it('returns the same key on multiple getKey() calls (cached)', () => {
-    const publicKey = new PublicKey(certPath);
+    const publicKey = new PublicKey(publicKeyPath);
 
     const key1 = publicKey.getKey();
     const key2 = publicKey.getKey();
@@ -24,7 +22,7 @@ describe('PublicKey', () => {
   });
 
   it('throws if content is invalid public key', () => {
-    const file = certPath;
+    const file = publicKeyPath;
 
     const badKey = new PublicKey(file);
 

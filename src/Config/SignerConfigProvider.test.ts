@@ -2,15 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { InvalidArgumentException } from '../Exceptions/InvalidArgumentException';
 import { SignerConfig } from './SignerConfig';
 import { SignerConfigProvider } from './SignerConfigProvider';
-import path from 'path';
+import { privateKeyPath, publicKeyPath } from '@tests/helpers/keys';
 
 describe('SignerConfigProvider', () => {
-  const testCertPath = path.resolve(__dirname, 'tests/_certs/test.pem');
-  const testPubPath = path.resolve(__dirname, 'tests/_certs/test-pub.pem');
 
   it('should add and retrieve config correctly', () => {
     const provider = new SignerConfigProvider();
-    const config = new SignerConfig(testCertPath, '1234567', testPubPath);
+    const config = new SignerConfig(privateKeyPath, '1234567', publicKeyPath);
 
     provider.addConfig(config, 'czk');
     provider.setDefaultGateway('czk');
@@ -21,7 +19,7 @@ describe('SignerConfigProvider', () => {
 
   it('should add default config and retrieve it without specifying gateway', () => {
     const provider = new SignerConfigProvider();
-    const config = new SignerConfig(testCertPath, '1234567', testPubPath);
+    const config = new SignerConfig(privateKeyPath, '1234567', publicKeyPath);
 
     provider.addConfig(config, provider.getDefaultGateway());
 

@@ -1,13 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import path from 'path';
 import { PrivateKey } from './Key/PrivateKey';
 import { PublicKey } from './Key/PublicKey';
 import { Signer } from './Signer';
 import { SignerException } from '@/Exceptions/SignerException';
 import { KeyObject } from 'crypto';
+import { privateKeyPath, publicKeyPath } from '@tests/helpers/keys';
 
-const privateKeyPath = path.join(__dirname, '../../tests/_certs/test.pem');
-const publicKeyPath = path.join(__dirname, '../../tests/_certs/test-pub.pem');
 
 const params = {
   MERCHANTNUMBER: '123456789',

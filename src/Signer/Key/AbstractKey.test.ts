@@ -1,5 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
-import fs from 'fs';
+import { describe, it, expect } from 'vitest';
 import { KeyObject } from 'crypto';
 import { InvalidArgumentException } from '@/Exceptions/InvalidArgumentException';
 import { AbstractKey } from './AbstractKey';

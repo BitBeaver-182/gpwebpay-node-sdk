@@ -1,17 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { PrivateKey } from '../../../src/Signer/Key/PrivateKey';
-import { join } from 'path';
-
-const certPath = join(__dirname, '../../../tests/_certs/test.pem');
+import { privateKeyPath } from '@tests/helpers/keys';
+import { PrivateKey } from './PrivateKey';
 
 describe('PrivateKey', () => {
   it('creates a private key successfully', () => {
-    new PrivateKey(certPath, '1234567');
+    new PrivateKey(privateKeyPath, '1234567');
     // No assertions: just expect not to throw
   });
 
   it('returns same key object on repeated getKey() calls', () => {
-    const privateKey = new PrivateKey(certPath, '1234567');
+    const privateKey = new PrivateKey(privateKeyPath, '1234567');
 
     const res1 = privateKey.getKey();
     const res2 = privateKey.getKey();
@@ -23,12 +21,12 @@ describe('PrivateKey', () => {
     const invalidPassword = 'wrongpass';
 
     const createWithWrongPass = () => {
-      const key = new PrivateKey(certPath, invalidPassword);
+      const key = new PrivateKey(privateKeyPath, invalidPassword);
       key.getKey(); // should throw
     };
 
     expect(createWithWrongPass).toThrowError(
-      `"${certPath}" is not a valid PEM private key (or password is incorrect).`
+      `"${privateKeyPath}" is not a valid PEM private key (or password is incorrect).`
     );
   });
 });
