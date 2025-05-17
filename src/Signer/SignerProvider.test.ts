@@ -4,7 +4,6 @@ import { SignerProvider } from './SignerProvider';
 import { createConfig, DEFAULT_GATEWAY } from '@tests/helpers/config';
 
 describe('SignerProvider', () => {
-
   it('should return default provider if no params pass', () => {
     const config = createConfig().getSignerConfigProvider();
     const provider = new SignerProvider(new SignerFactory(), config);
