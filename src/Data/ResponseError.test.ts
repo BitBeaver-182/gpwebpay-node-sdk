@@ -11,4 +11,24 @@ describe('ResponseErrorTest', () => {
     const error = new ResponseError(prcode, srcode);
     expect(error.getMessage(lang)).toBe(expectedMsg);
   });
+
+  it.each([
+    { prcode: 999, srcode: 9999, lang: 'cz', expectedMsg: 'Technický problém v systému, kontaktujete obchodníka' }, // prcode and srcode not found
+    { prcode: 28, srcode: 9999, lang: 'cz', expectedMsg: 'Technický problém v systému, kontaktujete obchodníka' }, // srcode not found
+    { prcode: 999, srcode: 3002, lang: 'cz', expectedMsg: 'Technický problém v systému, kontaktujete obchodníka' }, // prcode not found
+    { prcode: 28, srcode: 3002, lang: 'xx', expectedMsg: 'Technical problem in system, contact the merchant.' }, // lang not found
+  ])('getMessage with prcode $prcode, srcode $srcode, lang $lang', ({ prcode, srcode, lang, expectedMsg }) => {
+    const error = new ResponseError(prcode, srcode);
+    expect(error.getMessage(lang)).toBe(expectedMsg);
+  });
+
+  it('should return the correct prcode', () => {
+    const error = new ResponseError(28, 3002);
+    expect(error.getPrcode()).toBe(28);
+  });
+
+  it('should return the correct srcode', () => {
+    const error = new ResponseError(28, 3002);
+    expect(error.getSrcode()).toBe(3002);
+  });
 });
