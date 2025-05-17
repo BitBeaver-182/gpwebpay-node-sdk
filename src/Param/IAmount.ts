@@ -1,3 +1,3 @@
-import { IParam } from "./IParam";
+import type { IParam } from "./IParam";
 
-export interface IAmount extends IParam { }
+export interface IAmount extends IParam {}

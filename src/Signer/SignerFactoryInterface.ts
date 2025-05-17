@@ -1,7 +1,6 @@
-import { SignerConfig } from "../Config/SignerConfig";
-import { SignerInterface } from "./SignerInterface";
-
+import type { SignerConfig } from "../Config/SignerConfig";
+import type { SignerInterface } from "./SignerInterface";
 
 export interface SignerFactoryInterface {
-  create(config: SignerConfig): SignerInterface;
+	create(config: SignerConfig): SignerInterface;
 }

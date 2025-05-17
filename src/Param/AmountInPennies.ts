@@ -1,24 +1,22 @@
 import { Param } from "../Enum/Param";
-import { IAmount } from "./IAmount";
-
+import type { IAmount } from "./IAmount";
 
 export class AmountInPennies implements IAmount {
-  private amount: number;
+	private amount: number;
 
-  constructor(amount: number) {
-    this.amount = amount;
-  }
+	constructor(amount: number) {
+		this.amount = amount;
+	}
 
-  public getParamName(): string {
-    return Param.AMOUNT;
-  }
+	public getParamName(): string {
+		return Param.AMOUNT;
+	}
 
-  public getValue(): number {
-    return this.amount;
-  }
+	public getValue(): number {
+		return this.amount;
+	}
 
-  public toString(): string {
-    return this.amount.toString();
-  }
+	public toString(): string {
+		return this.amount.toString();
+	}
 }
-

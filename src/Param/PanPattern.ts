@@ -1,24 +1,24 @@
 import { Param } from "../Enum/Param";
 import { assertMaxLength } from "../validators";
-import { IParam } from "./IParam";
+import type { IParam } from "./IParam";
 
 export class PanPattern implements IParam {
-  private value: string;
+	private value: string;
 
-  constructor(value: string) {
-    assertMaxLength(value, 255, this.getParamName());
-    this.value = value;
-  }
+	constructor(value: string) {
+		assertMaxLength(value, 255, this.getParamName());
+		this.value = value;
+	}
 
-  public getValue(): string {
-    return this.value;
-  }
+	public getValue(): string {
+		return this.value;
+	}
 
-  public toString(): string {
-    return this.value;
-  }
+	public toString(): string {
+		return this.value;
+	}
 
-  public getParamName(): string {
-    return Param.PANPATTERN;
-  }
+	public getParamName(): string {
+		return Param.PANPATTERN;
+	}
 }

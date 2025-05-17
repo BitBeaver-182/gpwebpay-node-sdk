@@ -1,71 +1,68 @@
-
-import { InvalidArgumentException } from "../Exceptions/InvalidArgumentException";
-import { IAmount } from "../Param/IAmount";
-import { IParam } from "../Param/IParam";
-import { Md } from "../Param/Md";
-import { OrderNumber } from "../Param/OrderNumber";
-import { ResponseUrl } from "../Param/ResponseUrl";
 import { Operation as OperationEnum } from "../Enum/Operation";
+import type { Param as ParamEnum } from "../Enum/Param";
+import { InvalidArgumentException } from "../Exceptions/InvalidArgumentException";
+import type { Currency } from "../Param/Currency";
+import type { IAmount } from "../Param/IAmount";
+import type { IParam } from "../Param/IParam";
+import { Md } from "../Param/Md";
 import { Operation as OperationParam } from "../Param/Operation";
-import { Currency } from "../Param/Currency";
-import { Param as ParamEnum } from "../Enum/Param";
-import { OperationInterface } from "./OperationInterface";
+import type { OrderNumber } from "../Param/OrderNumber";
+import type { ResponseUrl } from "../Param/ResponseUrl";
+import type { OperationInterface } from "./OperationInterface";
 
 export class Operation implements OperationInterface {
-  private gateway: string | null = null;
-  private params: Record<string, IParam> = {};
+	private gateway: string | null = null;
+	private params: Record<string, IParam> = {};
 
-  constructor(
-    orderNumber: OrderNumber,
-    amount: IAmount,
-    currency: Currency,
-    gateway?: string | null,
-    responseUrl?: ResponseUrl | null,
-    operation?: OperationEnum | null
-  ) {
-    if (!operation) {
-      operation = OperationEnum.CREATE_ORDER;
-    }
+	constructor(
+		orderNumber: OrderNumber,
+		amount: IAmount,
+		currency: Currency,
+		gateway?: string | null,
+		responseUrl?: ResponseUrl | null,
+		operation?: OperationEnum | null,
+	) {
+		this.addParam(new OperationParam(operation ?? OperationEnum.CREATE_ORDER));
+		this.addParam(amount);
+		this.addParam(orderNumber);
+		this.addParam(currency);
 
-    this.addParam(new OperationParam(operation));
-    this.addParam(amount);
-    this.addParam(orderNumber);
-    this.addParam(currency);
+		if (gateway !== null && gateway !== undefined) {
+			this.gateway = gateway.toLowerCase();
+			this.addParam(new Md(this.gateway));
+		}
 
-    if (gateway !== null && gateway !== undefined) {
-      this.gateway = gateway.toLowerCase();
-      this.addParam(new Md(this.gateway));
-    }
+		if (responseUrl !== null && responseUrl !== undefined) {
+			this.addParam(responseUrl);
+		}
+	}
 
-    if (responseUrl !== null && responseUrl !== undefined) {
-      this.addParam(responseUrl);
-    }
-  }
+	public getGateway(): string | null {
+		return this.gateway;
+	}
 
-  public getGateway(): string | null {
-    return this.gateway;
-  }
+	public addParam(param: IParam): OperationInterface {
+		let internalParam = param;
 
-  public addParam(param: IParam): OperationInterface {
-    if (param instanceof Md && this.gateway !== String(param)) {
-      param = new Md(`${this.gateway}|${param}`);
-    }
+		if (param instanceof Md && this.gateway !== String(param)) {
+			internalParam = new Md(`${this.gateway}|${param}`);
+		}
 
-    const name = param.getParamName();
-    if (!name) {
-      throw new InvalidArgumentException('Parameter name cannot be empty');
-    }
+		const name = internalParam.getParamName();
+		if (!name) {
+			throw new InvalidArgumentException("Parameter name cannot be empty");
+		}
 
-    this.params[name] = param;
+		this.params[name] = internalParam;
 
-    return this;
-  }
+		return this;
+	}
 
-  public getParam(param: ParamEnum): IParam | null {
-    return this.params[String(param)] ?? null;
-  }
+	public getParam(param: ParamEnum): IParam | null {
+		return this.params[String(param)] ?? null;
+	}
 
-  public getParams(): IParam[] {
-    return Object.values(this.params);
-  }
+	public getParams(): IParam[] {
+		return Object.values(this.params);
+	}
 }

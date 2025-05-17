@@ -1,88 +1,97 @@
-import { PaymentConfigProvider } from './Config/PaymentConfigProvider';
-import { ResponseInterface } from './Data/ResponseInterface';
-import { Param } from './Enum/Param';
-import { GPWebPayException } from './Exceptions/GPWebPayException';
-import { GPWebPayResultException } from './Exceptions/GPWebPayResultException';
-import { SignerException } from './Exceptions/SignerException';
-import { ResponseProviderInterface, ResposeProviderErrorClosure, ResposeProviderSuccessClosure } from './ResponseProviderInterface';
-import { SignerProviderInterface } from './Signer/SignerProviderInterface';
-
+import type { PaymentConfigProvider } from "./Config/PaymentConfigProvider";
+import type { ResponseInterface } from "./Data/ResponseInterface";
+import { Param } from "./Enum/Param";
+import type { GPWebPayException } from "./Exceptions/GPWebPayException";
+import { GPWebPayResultException } from "./Exceptions/GPWebPayResultException";
+import { SignerException } from "./Exceptions/SignerException";
+import type {
+	ResponseProviderInterface,
+	ResposeProviderErrorClosure,
+	ResposeProviderSuccessClosure,
+} from "./ResponseProviderInterface";
+import type { SignerProviderInterface } from "./Signer/SignerProviderInterface";
 
 export class ResponseProvider implements ResponseProviderInterface {
-  private onSuccess: ResposeProviderSuccessClosure[] = [];
-  private onError: ResposeProviderErrorClosure[] = [];
+	private onSuccess: ResposeProviderSuccessClosure[] = [];
+	private onError: ResposeProviderErrorClosure[] = [];
 
-  constructor(
-    private readonly configProvider: PaymentConfigProvider,
-    private readonly signerProvider: SignerProviderInterface
-  ) { }
+	constructor(
+		private readonly configProvider: PaymentConfigProvider,
+		private readonly signerProvider: SignerProviderInterface,
+	) {}
 
-  public provide(response: ResponseInterface): ResponseInterface {
+	public provide(response: ResponseInterface): ResponseInterface {
+		try {
+			if (!this.verifyPaymentResponse(response)) {
+				throw new SignerException("Digest or Digest1 is incorrect!");
+			}
 
+			// verify PRCODE and SRCODE
+			if (response.hasError()) {
+				throw new GPWebPayResultException(
+					"Response has an error.",
+					response.getPrcode(),
+					response.getSrcode(),
+					response.getResultText(),
+				);
+			}
 
-    try {
-      if (!this.verifyPaymentResponse(response)) {
-        throw new SignerException('Digest or Digest1 is incorrect!');
-      }
+			this.onSuccessHandler(response);
+		} catch (exception) {
+			if (exception instanceof GPWebPayResultException) {
+				this.onErrorHandler(exception, response);
+			} else {
+				throw exception;
+			}
+		}
 
-      // verify PRCODE and SRCODE
-      if (response.hasError()) {
+		return response;
+	}
 
-        throw new GPWebPayResultException(
-          'Response has an error.',
-          response.getPrcode(),
-          response.getSrcode(),
-          response.getResultText()
-        );
-      }
+	public verifyPaymentResponse(response: ResponseInterface): boolean {
+		// verify digest & digest1
+		const signer = this.signerProvider.get(response.getGatewayKey());
 
-      this.onSuccessHandler(response);
-    } catch (exception) {
-      if (exception instanceof GPWebPayResultException) {
-        this.onErrorHandler(exception, response);
-      } else {
-        throw exception;
-      }
-    }
+		const params = response.getParams();
+		const verify = signer.verify(params, response.getDigest());
+		params[Param.MERCHANTNUMBER] = this.configProvider.getMerchantNumber(
+			response.getGatewayKey(),
+		);
+		const verify1 = signer.verify(params, response.getDigest1());
 
-    return response;
-  }
+		return !(false === verify || false === verify1);
+	}
 
-  public verifyPaymentResponse(response: ResponseInterface): boolean {
-    // verify digest & digest1
-    const signer = this.signerProvider.get(response.getGatewayKey());
+	public addOnSuccess(
+		closure: ResposeProviderSuccessClosure,
+	): ResponseProviderInterface {
+		this.onSuccess.push(closure);
+		return this;
+	}
 
-    const params = response.getParams();
-    const verify = signer.verify(params, response.getDigest());
-    params[Param.MERCHANTNUMBER] = this.configProvider.getMerchantNumber(response.getGatewayKey());
-    const verify1 = signer.verify(params, response.getDigest1());
+	public addOnError(
+		closure: ResposeProviderErrorClosure,
+	): ResponseProviderInterface {
+		this.onError.push(closure);
+		return this;
+	}
 
-    return !(false === verify || false === verify1);
-  }
+	private onSuccessHandler(response: ResponseInterface): void {
+		for (const callback of this.onSuccess) {
+			callback(response);
+		}
+	}
 
-  public addOnSuccess(closure: ResposeProviderSuccessClosure): ResponseProviderInterface {
-    this.onSuccess.push(closure);
-    return this;
-  }
+	private onErrorHandler(
+		exception: GPWebPayException,
+		response: ResponseInterface,
+	): void {
+		if (this.onError.length === 0) {
+			throw exception;
+		}
 
-  public addOnError(closure: ResposeProviderErrorClosure): ResponseProviderInterface {
-    this.onError.push(closure);
-    return this;
-  }
-
-  private onSuccessHandler(response: ResponseInterface): void { // Changed to onSuccessHandler
-    this.onSuccess.forEach(callback => {
-      callback(response);
-    });
-  }
-
-  private onErrorHandler(exception: GPWebPayException, response: ResponseInterface): void {
-    if (this.onError.length === 0) {
-      throw exception;
-    }
-
-    this.onError.forEach(callback => {
-      callback(exception, response);
-    });
-  }
+		for (const callback of this.onError) {
+			callback(exception, response);
+		}
+	}
 }

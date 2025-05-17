@@ -3,21 +3,21 @@
  * including private and public key paths and the private key password.
  */
 export class SignerConfig {
-  constructor(
-    private readonly privateKey: string,
-    private readonly privateKeyPassword: string,
-    private readonly publicKey: string
-  ) { }
+	constructor(
+		private readonly privateKey: string,
+		private readonly privateKeyPassword: string,
+		private readonly publicKey: string,
+	) {}
 
-  getPrivateKey(): string {
-    return this.privateKey;
-  }
+	getPrivateKey(): string {
+		return this.privateKey;
+	}
 
-  getPrivateKeyPassword(): string {
-    return this.privateKeyPassword;
-  }
+	getPrivateKeyPassword(): string {
+		return this.privateKeyPassword;
+	}
 
-  getPublicKey(): string {
-    return this.publicKey;
-  }
+	getPublicKey(): string {
+		return this.publicKey;
+	}
 }

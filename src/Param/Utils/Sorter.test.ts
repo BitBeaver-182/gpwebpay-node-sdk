@@ -1,93 +1,124 @@
-import { describe, it, expect, vi } from 'vitest';
-import { IParam, Stringable } from '../IParam';
-import { Sorter } from './Sorter';
-import { Param } from '@/Enum/Param';
+import { Param } from "@/Enum/Param";
+import { describe, expect, it, vi } from "vitest";
+import type { IParam, Stringable } from "../IParam";
+import { Sorter } from "./Sorter";
 
 class FakeParam implements IParam {
-  constructor(public value: string) { }
+	constructor(public value: string) {}
 
-  getParamName(): string {
-    return 'fake'
-  }
-  getValue(): number | string | Stringable | Array<string | Stringable> {
-    return this.value
-  }
-  toString(): string {
-    return this.value
-  }
+	getParamName(): string {
+		return "fake";
+	}
+	getValue(): number | string | Stringable | Array<string | Stringable> {
+		return this.value;
+	}
+	toString(): string {
+		return this.value;
+	}
 }
 
-describe('Sorter', () => {
-  it('should sort request params in correct order', () => {
-    const inputParams: Record<string, FakeParam> = {};
-    for (const key of Sorter.REQUEST_PARAM_ORDER) {
-      inputParams[key] = new FakeParam('someparam');
-    }
+describe("Sorter", () => {
+	it("should sort request params in correct order", () => {
+		const inputParams: Record<string, FakeParam> = {};
+		for (const key of Sorter.REQUEST_PARAM_ORDER) {
+			inputParams[key] = new FakeParam("someparam");
+		}
 
-    const sorted = Sorter.sortRequestParams(inputParams);
-    expect(Object.keys(sorted)).toEqual(Sorter.REQUEST_PARAM_ORDER);
-  });
+		const sorted = Sorter.sortRequestParams(inputParams);
+		expect(Object.keys(sorted)).toEqual(Sorter.REQUEST_PARAM_ORDER);
+	});
 
-  it('should sort response params in correct order', () => {
-    const inputParams: Record<string, FakeParam> = {};
-    for (const key of Sorter.RESPONSE_PARAM_ORDER) {
-      inputParams[key] = new FakeParam('someparam');
-    }
+	it("should sort response params in correct order", () => {
+		const inputParams: Record<string, FakeParam> = {};
+		for (const key of Sorter.RESPONSE_PARAM_ORDER) {
+			inputParams[key] = new FakeParam("someparam");
+		}
 
-    const sorted = Sorter.sortResponseParams(inputParams);
-    expect(Object.keys(sorted)).toEqual(Sorter.RESPONSE_PARAM_ORDER);
-  });
+		const sorted = Sorter.sortResponseParams(inputParams);
+		expect(Object.keys(sorted)).toEqual(Sorter.RESPONSE_PARAM_ORDER);
+	});
 
-  it('should place unknown keys last when sorting', () => {
-    const input: Record<string, FakeParam> = {
-      UNKNOWN_KEY: new FakeParam('z-last'),
-      [Param.MERCHANTNUMBER]: new FakeParam('a-first'),
-    };
+	it("should place unknown keys last when sorting", () => {
+		const originalOrder = [...Sorter.REQUEST_PARAM_ORDER];
+		Sorter.REQUEST_PARAM_ORDER.splice(
+			0,
+			Sorter.REQUEST_PARAM_ORDER.length,
+			Param.MERCHANTNUMBER,
+		); // override
 
-    const result = Sorter['sort'](input, { [Param.MERCHANTNUMBER]: 0 });
-    const keys = Object.keys(result);
+		const input: Record<string, FakeParam> = {
+			UNKNOWN_KEY: new FakeParam("z-last"),
+			[Param.MERCHANTNUMBER]: new FakeParam("a-first"),
+		};
 
-    expect(keys[0]).toBe(Param.MERCHANTNUMBER);
-    expect(keys[1]).toBe('UNKNOWN_KEY'); // Infinity sort order fallback
-  });
+		const result = Sorter.sortRequestParams(input);
+		const keys = Object.keys(result);
 
-  it('should handle mixed Param and Response in sortResponseParams', () => {
-    const allKeys = Sorter.RESPONSE_PARAM_ORDER.map(k => k.toString());
+		expect(keys[0]).toBe(Param.MERCHANTNUMBER);
+		expect(keys[1]).toBe("UNKNOWN_KEY");
 
-    const input: Record<string, FakeParam> = {};
-    for (const key of allKeys) {
-      input[key] = new FakeParam('value');
-    }
+		// restore
+		Sorter.REQUEST_PARAM_ORDER.splice(
+			0,
+			Sorter.REQUEST_PARAM_ORDER.length,
+			...originalOrder,
+		);
+	});
 
-    const result = Sorter.sortResponseParams(input);
-    expect(Object.keys(result)).toEqual(allKeys);
-  });
+	it("should handle mixed Param and Response in sortResponseParams", () => {
+		const allKeys = Sorter.RESPONSE_PARAM_ORDER.map((k) => k.toString());
 
-  it('should cover typeof param !== "string" branch in sortResponseParams', () => {
-    // simulate non-string enum-like value
-    const mockParam = 1234 as unknown as Param;
+		const input: Record<string, FakeParam> = {};
+		for (const key of allKeys) {
+			input[key] = new FakeParam("value");
+		}
 
-    const spy = vi.spyOn(Sorter as any, 'sort');
+		const result = Sorter.sortResponseParams(input);
+		expect(Object.keys(result)).toEqual(allKeys);
+	});
 
-    const params = { [mockParam]: new FakeParam('val') };
-    Sorter.RESPONSE_PARAM_ORDER.push(mockParam);
+	it("should handle non-string values in RESPONSE_PARAM_ORDER without error", () => {
+		const mockParam = 1234 as unknown as Param;
 
-    Sorter.sortResponseParams(params);
+		const originalOrder = [...Sorter.RESPONSE_PARAM_ORDER];
+		Sorter.RESPONSE_PARAM_ORDER.push(mockParam);
 
-    expect(spy).toHaveBeenCalled();
-  });
+		const params = { [mockParam]: new FakeParam("val") };
 
-  it('should cover order[key] === undefined case (fallback to Infinity)', () => {
-    const params = {
-      a: new FakeParam('val1'),
-      b: new FakeParam('val2'), // not in order
-    };
+		const result = Sorter.sortResponseParams(params);
+		const keys = Object.keys(result);
 
-    const customOrder = { a: 0 }; // 'b' is NOT included
+		expect(keys).toContain(mockParam.toString());
 
-    const result = (Sorter as any).sort(params, customOrder);
-    expect(Object.keys(result)).toEqual(['a', 'b']); // 'b' goes last
-  });
+		// clean up
+		Sorter.RESPONSE_PARAM_ORDER.splice(
+			0,
+			Sorter.RESPONSE_PARAM_ORDER.length,
+			...originalOrder,
+		);
+	});
 
+	it("should place keys not in order at the end (fallback to Infinity)", () => {
+		const originalOrder = [...Sorter.REQUEST_PARAM_ORDER];
+		Sorter.REQUEST_PARAM_ORDER.splice(
+			0,
+			Sorter.REQUEST_PARAM_ORDER.length,
+			"a" as unknown as Param,
+		); // custom test order
 
+		const params = {
+			a: new FakeParam("val1"),
+			b: new FakeParam("val2"),
+		};
+
+		const result = Sorter.sortRequestParams(params);
+		expect(Object.keys(result)).toEqual(["a", "b"]);
+
+		// restore original
+		Sorter.REQUEST_PARAM_ORDER.splice(
+			0,
+			Sorter.REQUEST_PARAM_ORDER.length,
+			...originalOrder,
+		);
+	});
 });

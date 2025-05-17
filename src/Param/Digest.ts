@@ -1,39 +1,38 @@
 import { Param } from "../Enum/Param";
 import { assertMaxLength } from "../validators";
-import { IParam } from "./IParam";
-
+import type { IParam } from "./IParam";
 
 export class Digest implements IParam {
-  private value: string;
+	private value: string;
 
-  /**
-   * Description constructor.
-   *
-   * @param value
-   * @throws InvalidArgumentException
-   */
-  constructor(value: string) {
-    this.validate(value);
-    this.value = value;
-  }
+	/**
+	 * Description constructor.
+	 *
+	 * @param value
+	 * @throws InvalidArgumentException
+	 */
+	constructor(value: string) {
+		this.validate(value);
+		this.value = value;
+	}
 
-  public getValue(): string {
-    return this.value;
-  }
+	public getValue(): string {
+		return this.value;
+	}
 
-  public toString(): string {
-    return this.value;
-  }
+	public toString(): string {
+		return this.value;
+	}
 
-  public getParamName(): string {
-    return Param.DIGEST;
-  }
+	public getParamName(): string {
+		return Param.DIGEST;
+	}
 
-  /**
-   * @param value
-   * @throws InvalidArgumentException
-   */
-  protected validate(value: string): void {
-    assertMaxLength(value, 2000, this.getParamName());
-  }
+	/**
+	 * @param value
+	 * @throws InvalidArgumentException
+	 */
+	protected validate(value: string): void {
+		assertMaxLength(value, 2000, this.getParamName());
+	}
 }

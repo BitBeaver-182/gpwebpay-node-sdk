@@ -11,22 +11,22 @@
  * TypeScript equivalent of PHP's Stringable interface
  */
 export interface Stringable {
-  toString(): string;
+	toString(): string;
 }
 
 /**
  * Interface for parameters in GPWebPay integration
  */
 export interface IParam extends Stringable {
-  /**
-   * Returns the parameter name
-   * @returns The parameter name
-   */
-  getParamName(): string;
+	/**
+	 * Returns the parameter name
+	 * @returns The parameter name
+	 */
+	getParamName(): string;
 
-  /**
-   * Returns the parameter value
-   * @returns The parameter value which can be various types
-   */
-  getValue(): number | string | Stringable | Array<string | Stringable>;
+	/**
+	 * Returns the parameter value
+	 * @returns The parameter value which can be various types
+	 */
+	getValue(): number | string | Stringable | Array<string | Stringable>;
 }

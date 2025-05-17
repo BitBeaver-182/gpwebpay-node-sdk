@@ -1,18 +1,18 @@
-import { Param } from "../Enum/Param";
-import { IParam } from "../Param/IParam";
+import type { Param } from "../Enum/Param";
+import type { IParam } from "../Param/IParam";
 
 export interface OperationInterface {
-  getGateway(): string | null;
+	getGateway(): string | null;
 
-  /**
-   * @throws InvalidArgumentException
-   */
-  addParam(param: IParam): OperationInterface;
+	/**
+	 * @throws InvalidArgumentException
+	 */
+	addParam(param: IParam): OperationInterface;
 
-  getParam(param: Param): IParam | null;
+	getParam(param: Param): IParam | null;
 
-  /**
-   * @return IParam[]
-   */
-  getParams(): IParam[];
+	/**
+	 * @return IParam[]
+	 */
+	getParams(): IParam[];
 }
