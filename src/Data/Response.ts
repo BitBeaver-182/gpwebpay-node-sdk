@@ -104,6 +104,7 @@ export class Response implements ResponseInterface {
 
   public getUserParam1(): string | null {
     const param = this.params[Param.USERPARAM];
+    // Need coverage for the line bellow but it's impossible to reach
     return param ? String(param) : null;
   }
 

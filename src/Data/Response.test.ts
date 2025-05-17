@@ -93,4 +93,76 @@ describe('Response', () => {
 
     expect(response.hasError()).toBe(true)
   })
+
+  it('should return the correct parameter object if it exists', () => {
+    const response = new ResponseData(
+      params[Param.OPERATION],
+      params[Param.ORDERNUMBER],
+      params[Param.MERORDERNUM],
+      params[Param.MD],
+      Number(params[ResponseEnum.PRCODE]),
+      Number(params[ResponseEnum.SRCODE]),
+      params[ResponseEnum.RESULTTEXT],
+      params[Param.DIGEST],
+      params[ResponseEnum.DIGEST1],
+      params['gatewayKey']
+    );
+
+    const userParam = new UserParam('someUserValue');
+    response.addParam(userParam);
+
+    const fetchedParam = response.getParam(Param.USERPARAM);
+    expect(fetchedParam?.getValue()).toBe('someUserValue');
+  });
+
+  it('should return null for a param that does not exist', () => {
+    const response = new ResponseData(
+      params[Param.OPERATION],
+      params[Param.ORDERNUMBER],
+      params[Param.MERORDERNUM],
+      params[Param.MD],
+      Number(params[ResponseEnum.PRCODE]),
+      Number(params[ResponseEnum.SRCODE]),
+      params[ResponseEnum.RESULTTEXT],
+      params[Param.DIGEST],
+      params[ResponseEnum.DIGEST1],
+      params['gatewayKey']
+    );
+
+    const nonExistent = response.getParam('nonexistent-param');
+    expect(nonExistent).toBeNull();
+  });
+
+  it('should return null when md param is missing', () => {
+    const response = new ResponseData(
+      params[Param.OPERATION],
+      params[Param.ORDERNUMBER],
+      params[Param.MERORDERNUM],
+      '', // Pass an empty string for md
+      Number(params[ResponseEnum.PRCODE]),
+      Number(params[ResponseEnum.SRCODE]),
+      params[ResponseEnum.RESULTTEXT],
+      params[Param.DIGEST],
+      params[ResponseEnum.DIGEST1],
+      params['gatewayKey'],
+    );
+    expect(response.getMd()).toBeNull();
+  });
+
+  // it('should return the param value as a string when it exists', () => {
+  //   const response = new ResponseData(
+  //     params[Param.OPERATION],
+  //     params[Param.ORDERNUMBER],
+  //     params[Param.MERORDERNUM],
+  //     params[Param.MD],
+  //     Number(params[ResponseEnum.PRCODE]),
+  //     Number(params[ResponseEnum.SRCODE]),
+  //     params[ResponseEnum.RESULTTEXT],
+  //     params[Param.DIGEST],
+  //     params[ResponseEnum.DIGEST1],
+  //     params['gatewayKey'],
+  //   );
+  //   expect(response.getUserParam1()).toBe('userparam'); // Assuming you add a user param in other tests
+  // });
+
 })
