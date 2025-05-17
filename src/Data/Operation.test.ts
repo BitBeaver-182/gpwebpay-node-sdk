@@ -7,8 +7,25 @@ import { Md } from '../Param/Md';
 import { OrderNumber } from '../Param/OrderNumber';
 import { ResponseUrl } from '../Param/ResponseUrl';
 import { Operation } from './Operation';
+import { IParam } from '@/Param/IParam';
+import { InvalidArgumentException } from '@/Exceptions/InvalidArgumentException';
+
+class EmptyNameParam implements IParam {
+  getParamName(): string {
+    return '';
+  }
+
+  getValue(): string {
+    return 'invalid';
+  }
+
+  toString(): string {
+    return 'invalid';
+  }
+}
 
 describe('OperationTest', () => {
+
   it('should successfully create a basic operation', () => {
     const operation = new Operation(
       new OrderNumber('123456'),
@@ -30,5 +47,17 @@ describe('OperationTest', () => {
     expect(operation.getParam(Param.MD)?.toString()).toBe('czk|someMd');
   });
 
-  // You can add more test cases here as needed
+  it('should throw InvalidArgumentException for empty param name', () => {
+    const operation = new Operation(
+      new OrderNumber('123456'),
+      new AmountInPennies(100000),
+      new Currency(CurrencyEnum.CZK)
+    );
+
+    const invalidParam = new EmptyNameParam();
+
+    expect(() => operation.addParam(invalidParam)).toThrow(InvalidArgumentException);
+    expect(() => operation.addParam(invalidParam)).toThrow('Parameter name cannot be empty');
+  });
+
 });
