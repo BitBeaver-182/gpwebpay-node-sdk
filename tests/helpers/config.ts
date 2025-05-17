@@ -4,7 +4,7 @@ import { privateKey2Path, privateKeyPath, publicKey2Path, publicKeyPath } from "
 
 export const DEFAULT_GATEWAY = "czk";
 
-export const createConfig = () => {
+export const createConfig = (defaultGateway = DEFAULT_GATEWAY) => {
   const factory = new ConfigFactory(new PaymentConfigFactory());
   return factory.create({
     'czk': {
@@ -23,5 +23,5 @@ export const createConfig = () => {
       [ConfigFactory.MERCHANT_NUMBER]: '123456780',
       [ConfigFactory.DEPOSIT_FLAG]: 1,
     }
-  }, DEFAULT_GATEWAY)
+  }, defaultGateway)
 }

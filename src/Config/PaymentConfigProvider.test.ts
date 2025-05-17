@@ -34,18 +34,18 @@ describe('PaymentConfigProvider', () => {
 
     // Default gateway checks
     expect(configProvider.getUrl(configProvider.getDefaultGateway())).toBe('http://localhost');
-    expect(configProvider.getMerchantNumber(configProvider.getDefaultGateway())).toBe(`${merchantNumber1.toString()}`);
-    expect(configProvider.getDepositFlag(configProvider.getDefaultGateway())).toBe(depositFlag1.toString());
+    expect(String(configProvider.getMerchantNumber(configProvider.getDefaultGateway()))).toBe(`${merchantNumber1.toString()}`);
+    expect(String(configProvider.getDepositFlag(configProvider.getDefaultGateway()))).toBe(depositFlag1.toString());
 
     // Explicit gateway 'czk'
     expect(configProvider.getUrl('czk')).toBe('http://localhost');
-    expect(configProvider.getMerchantNumber('czk')).toBe(`${merchantNumber1.toString()}`);
-    expect(configProvider.getDepositFlag('czk')).toBe(depositFlag1.toString());
+    expect(String(configProvider.getMerchantNumber('czk'))).toBe(`${merchantNumber1.toString()}`);
+    expect(String(configProvider.getDepositFlag('czk'))).toBe(depositFlag1.toString());
 
     // Explicit gateway 'eur'
     expect(configProvider.getUrl('eur')).toBe('http://local');
-    expect(configProvider.getMerchantNumber('eur')).toBe(merchantNumber2.toString());
-    expect(configProvider.getDepositFlag('eur')).toBe(depositFlag2.toString());
+    expect(String(configProvider.getMerchantNumber('eur'))).toBe(merchantNumber2.toString());
+    expect(String(configProvider.getDepositFlag('eur'))).toBe(depositFlag2.toString());
   });
 
   it('throws when trying to access non-existing gateway config', () => {

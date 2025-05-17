@@ -23,8 +23,8 @@ describe('ConfigFactory', () => {
     const configProvider = config.getPaymentConfigProvider();
 
     expect(configProvider.getUrl()).toBe('https://test.3dsecure.gpwebpay.com/unicredit/order.do');
-    expect(configProvider.getMerchantNumber()).toBe('123456789');
-    expect(configProvider.getDepositFlag()).toBe('1');
+    expect(String(configProvider.getMerchantNumber())).toBe('123456789');
+    expect(String(configProvider.getDepositFlag())).toBe('1');
 
     const signerConfig = config.getSignerConfigProvider().getConfig();
     expect(signerConfig.getPrivateKey()).toBe(privateKeyPath);
@@ -34,7 +34,7 @@ describe('ConfigFactory', () => {
 
   it('creates config from multiple gateways', () => {
     const config = factory.create({
-      czk: {
+      [CZK]: {
         PRIVATE_KEY: privateKeyPath,
         PRIVATE_KEY_PASSPHRASE: '1234567',
         PUBLIC_KEY: publicKeyPath,
@@ -42,7 +42,7 @@ describe('ConfigFactory', () => {
         MERCHANT_NUMBER: '123456789',
         DEPOSIT_FLAG: 1,
       },
-      eur: {
+      [EUR]: {
         PRIVATE_KEY: privateKey2Path,
         PRIVATE_KEY_PASSPHRASE: '12345678',
         PUBLIC_KEY: publicKey2Path,
@@ -56,18 +56,18 @@ describe('ConfigFactory', () => {
 
     // defaults
     expect(provider.getUrl()).toBe('https://test.3dsecure.gpwebpay.com/unicredit/order.do');
-    expect(provider.getMerchantNumber()).toBe('123456789');
-    expect(provider.getDepositFlag()).toBe('1');
+    expect(String(provider.getMerchantNumber())).toBe('123456789');
+    expect(String(provider.getDepositFlag())).toBe('1');
 
     // czk
     expect(provider.getUrl(CZK)).toBe('https://test.3dsecure.gpwebpay.com/unicredit/order.do');
-    expect(provider.getMerchantNumber(CZK)).toBe('123456789');
-    expect(provider.getDepositFlag(CZK)).toBe('1');
+    expect(String(provider.getMerchantNumber(CZK))).toBe('123456789');
+    expect(String(provider.getDepositFlag(CZK))).toBe('1');
 
     // eur
     expect(provider.getUrl(EUR)).toBe('https://test.3dsecure.gpwebpay.com/unicredit/order.do');
-    expect(provider.getMerchantNumber(EUR)).toBe('123456780');
-    expect(provider.getDepositFlag(EUR)).toBe('0');
+    expect(String(provider.getMerchantNumber(EUR))).toBe('123456780');
+    expect(String(provider.getDepositFlag(EUR))).toBe('0');
 
     const signerDefault = config.getSignerConfigProvider().getConfig();
     expect(signerDefault.getPrivateKey()).toBe(privateKeyPath);
