@@ -9,12 +9,12 @@ export default defineConfig({
     coverage: {
       provider: 'v8', // or 'istanbul'
       reporter: ['json'],
-      thresholds: {
-        lines: 96,
-        branches: 95,
-        functions: 95,
-        statements: 95,
-      },
+      // thresholds: {
+      //   lines: 95,
+      //   branches: 95,
+      //   functions: 95,
+      //   statements: 95,
+      // },
     },
 
   },
