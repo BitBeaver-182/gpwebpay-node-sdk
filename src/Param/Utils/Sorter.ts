@@ -1,4 +1,3 @@
-import { ResponseInterface } from "../../Data/ResponseInterface";
 import { Param } from "../../Enum/Param";
 import { Response } from "../../Enum/Response";
 
