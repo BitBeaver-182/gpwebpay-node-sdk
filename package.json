@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage --reporter=json --outDir=coverage-json"
   },
   "keywords": [],
   "author": "",
