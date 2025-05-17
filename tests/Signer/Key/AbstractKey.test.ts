@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { InvalidArgumentException } from '../../../src/Exceptions/InvalidArgumentException';
-import { AbstractKey } from '../../../src/Signer/Key/AbstractKey';
-import type { KeyObject } from 'node:crypto';
-import { createPrivateKey } from 'node:crypto';
-import * as fs from 'node:fs';
-import { SignerException } from '../../../src/Exceptions/SignerException';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { InvalidArgumentException } from "../../../src/Exceptions/InvalidArgumentException";
+import { AbstractKey } from "../../../src/Signer/Key/AbstractKey";
+import type { KeyObject } from "node:crypto";
+import { createPrivateKey } from "node:crypto";
+import * as fs from "node:fs";
+import { SignerException } from "../../../src/Exceptions/SignerException";
 
 // Mock fs module
 vi.mock("node:fs", () => ({
@@ -14,7 +14,7 @@ vi.mock("node:fs", () => ({
 
 // Mock crypto module
 vi.mock("node:crypto", () => ({
-	KeyObject: class { },
+	KeyObject: class {},
 	createPrivateKey: vi.fn(),
 	createPublicKey: vi.fn(),
 }));
@@ -23,49 +23,52 @@ vi.mock("node:crypto", () => ({
 class ConcreteKey extends AbstractKey {
 	protected createKey: () => KeyObject; // Override with a function type
 
-	constructor(file: string, createKeyImpl: () => KeyObject) { // Add constructor parameter
+	constructor(file: string, createKeyImpl: () => KeyObject) {
+		// Add constructor parameter
 		super(file);
 		this.createKey = createKeyImpl;
 	}
 }
 
-describe('AbstractKey', () => {
-	const testFilePath = '/path/to/key.pem';
+describe("AbstractKey", () => {
+	const testFilePath = "/path/to/key.pem";
 
 	beforeEach(() => {
 		// Default behavior for mocks
 		vi.mocked(fs.existsSync).mockReturnValue(true);
-		vi.mocked(fs.readFileSync).mockReturnValue('mock-key-content');
+		vi.mocked(fs.readFileSync).mockReturnValue("mock-key-content");
 	});
 
 	afterEach(() => {
 		vi.resetAllMocks();
 	});
 
-	describe('constructor', () => {
-		it('should create an instance with a valid file path', () => {
+	describe("constructor", () => {
+		it("should create an instance with a valid file path", () => {
 			// Arrange & Act
-			const key = new ConcreteKey(testFilePath, () => ({} as KeyObject));
+			const key = new ConcreteKey(testFilePath, () => ({}) as KeyObject);
 
 			// Assert
 			expect(key).toBeInstanceOf(AbstractKey);
 			expect(fs.existsSync).toHaveBeenCalledWith(testFilePath);
 		});
 
-		it('should throw InvalidArgumentException if file does not exist', () => {
+		it("should throw InvalidArgumentException if file does not exist", () => {
 			// Arrange
 			vi.mocked(fs.existsSync).mockReturnValue(false);
 
 			// Act & Assert
-			expect(() => new ConcreteKey(testFilePath, () => ({} as KeyObject))).toThrow(InvalidArgumentException);
+			expect(
+				() => new ConcreteKey(testFilePath, () => ({}) as KeyObject),
+			).toThrow(InvalidArgumentException);
 			expect(fs.existsSync).toHaveBeenCalledWith(testFilePath);
 		});
 	});
 
-	describe('getKey', () => {
-		it('should return a key object', () => {
+	describe("getKey", () => {
+		it("should return a key object", () => {
 			// Arrange
-			const key = new ConcreteKey(testFilePath, () => ({} as KeyObject));
+			const key = new ConcreteKey(testFilePath, () => ({}) as KeyObject);
 
 			// Act
 			const result = key.getKey();
@@ -74,7 +77,7 @@ describe('AbstractKey', () => {
 			expect(result).toBeDefined();
 		});
 
-		it('should cache the key object on subsequent calls', () => {
+		it("should cache the key object on subsequent calls", () => {
 			// Arrange
 			let createKeyCallCount = 0;
 			const mockCreateKey = () => {
@@ -92,17 +95,17 @@ describe('AbstractKey', () => {
 			expect(firstResult).toBe(secondResult);
 		});
 
-		it('should throw SignerException when file cannot be read by getContent', () => {
+		it("should throw SignerException when file cannot be read by getContent", () => {
 			// Arrange
 			vi.mocked(fs.readFileSync).mockImplementation(() => {
 				throw new Error("File read error");
 			});
-			vi.mocked(createPrivateKey).getMockImplementation()
+			vi.mocked(createPrivateKey).getMockImplementation();
 			class MockedKey extends AbstractKey {
 				protected createKey(): KeyObject {
-					this.getContent()
-					return createPrivateKey("")
-				};
+					this.getContent();
+					return createPrivateKey("");
+				}
 			}
 
 			const key = new MockedKey("");

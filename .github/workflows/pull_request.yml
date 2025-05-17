@@ -21,10 +21,10 @@ jobs:
         run: npm ci
 
       - name: Run Biome lint
-        run: npx @biomejs/biome lint .
+        run: npm run lint
 
       - name: Run Biome format check
-        run: npx @biomejs/biome format . --write=false
+        run: npm run format
 
   test:
     name: Run Tests and Coverage

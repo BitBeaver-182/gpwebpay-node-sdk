@@ -28,8 +28,8 @@ describe("Signer", () => {
 
 		expect(hash).toBe(
 			"kMl9tg/up2z9CJu+Ebgm7mg3XSGOAvY2ZkrtgqOtzSprh1L22bvshGRlfDT9134Z2Hj1PWNitDOvgoAFnxyax8oIyx6eB4hMnNkB6xyr3X5XQXqsCsVRGYHYUOLvNuAag1kaNcVx+" +
-			"juqijxd0huvk60PMn5JjQijNl4ij36YwoqyN4UdP16LjIqYRIngaeHsTTR1XgIVmJIcuIfETV1QsiQCOYPw0s/ZTeri1DzpQq1Es5cERSupFBVp5Y8tJUna0Yx/oLh2SBhsw6BPixm6jhLAj" +
-			"qvQn+gmMv4AKDfTYdSPDqg1A+T3XFK/+vE+zOGW0/DHKr2ZqNYUQyD1adi3QA==",
+				"juqijxd0huvk60PMn5JjQijNl4ij36YwoqyN4UdP16LjIqYRIngaeHsTTR1XgIVmJIcuIfETV1QsiQCOYPw0s/ZTeri1DzpQq1Es5cERSupFBVp5Y8tJUna0Yx/oLh2SBhsw6BPixm6jhLAj" +
+				"qvQn+gmMv4AKDfTYdSPDqg1A+T3XFK/+vE+zOGW0/DHKr2ZqNYUQyD1adi3QA==",
 		);
 	});
 

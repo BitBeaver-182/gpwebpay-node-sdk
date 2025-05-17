@@ -1,7 +1,6 @@
 import { GPWebPayResultException } from "@/Exceptions/GPWebPayResultException";
 import { describe, expect, it } from "vitest";
 
-
 describe("GPWebPayResultExceptionTest", () => {
 	it("should create GPWebPayResultException with correct properties", () => {
 		const exception = new GPWebPayResultException("", 30, 1001, "resulttext");

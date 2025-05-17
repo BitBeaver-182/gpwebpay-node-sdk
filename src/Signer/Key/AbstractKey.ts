@@ -11,12 +11,12 @@ export abstract class AbstractKey {
 	}
 
 	public getKey(): KeyObject {
-		console.log("this.key ", this.key)
+		console.log("this.key ", this.key);
 		if (this.key !== null) {
-			console.log("here")
+			console.log("here");
 			return this.key;
 		}
-		console.log("there")
+		console.log("there");
 		this.key = this.createKey();
 		return this.key;
 	}

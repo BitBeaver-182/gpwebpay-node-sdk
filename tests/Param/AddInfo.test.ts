@@ -3,7 +3,6 @@ import { AddInfo } from "@/Param/AddInfo";
 import { faker } from "@faker-js/faker";
 import { describe, expect, it } from "vitest";
 
-
 describe("AddInfo", () => {
 	it("should create successfully with valid XML string", () => {
 		const xml = "<xml></xml>";
