@@ -1,13 +1,13 @@
-import { ResponseInterface } from "../../Data/ResponseInterface";
 import { Param } from "../../Enum/Param";
 import { Response } from "../../Enum/Response";
 
 
 export class DigestParamsFilter {
 
-  private constructor() {
-    // Prevent from overwriting
-  }
+
+  // We don't need to test private constructor.
+  /* v8 ignore next */
+  private constructor() { }
 
 
   /**
@@ -51,9 +51,8 @@ export class DigestParamsFilter {
   public static filter(params: Record<string, string>): Record<string, string> {
     const filteredParams: Record<string, string> = {};
     for (const key of DigestParamsFilter.DIGEST_PARAMS_KEYS) {
-      const paramKey = typeof key === 'string' ? key : key; // Handle both string and enum values
-      if (params.hasOwnProperty(paramKey)) {
-        filteredParams[paramKey] = params[paramKey];
+      if (params.hasOwnProperty(key)) {
+        filteredParams[key] = params[key];
       }
     }
     return filteredParams;
