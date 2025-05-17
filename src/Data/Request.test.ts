@@ -46,4 +46,28 @@ describe('Request', () => {
 
     expect(Object.keys(request.getParams())).toEqual(expectedOrder)
   })
+
+  it('should return only the base URL when asPost is true', () => {
+    const baseUrl = 'https://example.com/process';
+
+    const operation = new Operation(
+      new OrderNumber('123456'),
+      new AmountInPennies(100000),
+      new Currency(CurrencyEnum.CZK),
+      'czk',
+      new ResponseUrl('http://test.com')
+    );
+
+    const request = new Request(
+      operation,
+      new MerchantNumber('123456789'),
+      new DepositFlag(DepositFlagEnum.YES),
+      baseUrl
+    );
+
+    const result = request.getRequestUrl(true);
+
+    expect(result).toBe(baseUrl);
+  });
+
 })
