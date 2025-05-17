@@ -29,10 +29,10 @@ export class RequestFactory {
   public create(operation: OperationInterface): DataRequest {
     const key = this.config.getGateway(operation.getGateway());
 
-    if (operation.getParam(Param.RESPONSE_URL) === null) {
+    if (!operation.getParam(Param.RESPONSE_URL)) {
       const responseUrl = this.config.getResponseUrl();
 
-      if (responseUrl === null) {
+      if (!responseUrl) {
         throw new LogicException('You forgot to set up the response URL');
       }
 
