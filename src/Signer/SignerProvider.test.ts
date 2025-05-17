@@ -1,33 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { SignerFactory } from './SignerFactory';
 import { SignerProvider } from './SignerProvider';
-import { ConfigFactory } from '@/Config/Factory/ConfigFactory';
-import { PaymentConfigFactory } from '@/Config/Factory/PaymentConfigFactory';
-import path from 'path';
-
-const DEFAULT_GATEWAY = 'czk';
-
-const createConfig = () => {
-  const factory = new ConfigFactory(new PaymentConfigFactory());
-  return factory.create({
-    'czk': {
-      [ConfigFactory.PRIVATE_KEY]: path.join(__dirname, '../../tests/_certs/test.pem'),
-      [ConfigFactory.PRIVATE_KEY_PASSPHRASE]: '1234567',
-      [ConfigFactory.PUBLIC_KEY]: path.join(__dirname, '../../tests/_certs/test-pub.pem'),
-      [ConfigFactory.URL]: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
-      [ConfigFactory.MERCHANT_NUMBER]: '123456789',
-      [ConfigFactory.DEPOSIT_FLAG]: 1,
-    },
-    'eur': {
-      [ConfigFactory.PRIVATE_KEY]: path.join(__dirname, '../../tests/_certs/test2.pem'),
-      [ConfigFactory.PRIVATE_KEY_PASSPHRASE]: '12345678',
-      [ConfigFactory.PUBLIC_KEY]: path.join(__dirname, '../../tests/_certs/test-pub2.pem'),
-      [ConfigFactory.URL]: 'https://test.3dsecure.gpwebpay.com/unicredit/order.do',
-      [ConfigFactory.MERCHANT_NUMBER]: '123456780',
-      [ConfigFactory.DEPOSIT_FLAG]: 1,
-    }
-  }, DEFAULT_GATEWAY)
-}
+import { createConfig, DEFAULT_GATEWAY } from '@tests/helpers/config';
 
 describe('SignerProvider', () => {
 
