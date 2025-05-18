@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'node',
     coverage: {
       provider: 'v8', // or 'istanbul'
-      reporter: ['json'],
+      reporter: ['text', 'lcov']
       // thresholds: {
       //   lines: 95,
       //   branches: 95,
