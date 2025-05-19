@@ -1,4 +1,4 @@
-# gpwebpay-sdk
+# gpwebpay-node-sdk
 
 A TypeScript SDK for interacting with the [GP WebPay](http://www.gpwebpay.cz/) payment gateway, adapted from the [Pixidos/gpwebpay-core](https://github.com/Pixidos/gpwebpay-core) PHP library.
 
@@ -21,7 +21,7 @@ This package provides an easy and secure way to integrate GP WebPay into Node.js
 ## Installation
 
 ```bash
-npm install gpwebpay-sdk
+npm install gpwebpay-node-sdk
 ```
 
 GP WebPay Protocol Reference
