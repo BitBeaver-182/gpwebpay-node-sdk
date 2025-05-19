@@ -1,8 +1,31 @@
 {
   "name": "gpwebpay-node-sdk",
   "version": "1.0.0",
+  "description": "A TypeScript SDK for interacting with the GP WebPay payment gateway.",
+  "author": "Federico Diaz <contact@fdiaz.dev>",
+  "license": "MIT",
+  "keywords": [
+    "gpwebpay",
+    "payments",
+    "sdk",
+    "typescript",
+    "nodejs",
+    "payment-gateway",
+    "czech",
+    "gp webpay"
+  ],
+  "bugs": {
+    "url": "https://github.com/fedediiaz/gpwebpay-node-sdk/issues"
+  },
+  "homepage": "https://github.com/fedediiaz/gpwebpay-node-sdk#readme",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "vitest",
@@ -12,10 +35,6 @@
     "format:fix": "biome format --write ./src ./tests",
     "format": "biome format ./src ./tests"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "dotenv": "^16.5.0"
   },
