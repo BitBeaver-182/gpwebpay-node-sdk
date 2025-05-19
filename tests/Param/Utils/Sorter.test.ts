@@ -4,7 +4,7 @@ import { Sorter } from "@/Param/Utils/Sorter";
 import { describe, expect, it, vi } from "vitest";
 
 class FakeParam implements IParam {
-	constructor(public value: string) { }
+	constructor(public value: string) {}
 
 	getParamName(): string {
 		return "fake";

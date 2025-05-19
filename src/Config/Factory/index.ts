@@ -1,3 +1,3 @@
-export * from "./ConfigFactory"
-export * from "./ConfigFactoryInteface"
-export * from "./PaymentConfigFactory"
+export * from "./ConfigFactory";
+export * from "./ConfigFactoryInteface";
+export * from "./PaymentConfigFactory";
