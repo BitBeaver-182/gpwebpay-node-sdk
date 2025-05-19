@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest",
+    "typecheck": "tsc --noEmit",
     "test:coverage": "vitest --coverage",
     "lint": "biome lint ./src ./tests",
     "format:fix": "biome format --write ./src ./tests",

@@ -28,6 +28,9 @@ jobs:
       - name: Run Biome format check
         run: npm run format
 
+      - name: Run type check
+        run: npm run typecheck
+
   test:
     name: Run Tests and Coverage
     runs-on: ubuntu-latest
