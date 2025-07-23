@@ -29,6 +29,7 @@ jobs:
         with:
           node-version: "lts/*" # Uses the latest LTS Node.js version
           cache: 'pnpm'
+          package-manager: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
           registry-url: 'https://registry.npmjs.org/' # Configures npm for publishing
 
