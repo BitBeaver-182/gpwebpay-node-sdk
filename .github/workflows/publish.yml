@@ -12,9 +12,6 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: "lts/*"
 
     permissions:
       contents: write # to be able to publish a GitHub release (Lerna needs this to push version commits and tags)
@@ -34,10 +31,10 @@ jobs:
         with:
           version: 10
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js 
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "lts/*"
           cache-dependency-path: pnpm-lock.yaml
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/' # Configures npm for publishing

@@ -7,9 +7,6 @@ jobs:
   lint-and-format:
     name: Lint and Format with Biome
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: "lts/*"
 
     steps:
       - uses: actions/checkout@v4
@@ -19,10 +16,10 @@ jobs:
         with:
           version: 10
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "lts/*"
           cache-dependency-path: pnpm-lock.yaml
           cache: 'pnpm'
 
@@ -49,10 +46,10 @@ jobs:
         with:
           version: 10
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "lts/*"
           cache-dependency-path: pnpm-lock.yaml
           cache: 'pnpm'
 
