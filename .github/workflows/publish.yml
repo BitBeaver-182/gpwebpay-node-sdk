@@ -16,30 +16,34 @@ jobs:
       contents: write # to be able to publish a GitHub release (Lerna needs this to push version commits and tags)
       issues: write # to be able to comment on released issues (if Lerna's conventional commits/changelog does this)
       pull-requests: write # to be able to comment on released pull requests (if Lerna's conventional commits/changelog does this)
-      id-token: write # to enable use of OIDC for npm provenance (still good for npm publish)
+      id-token: write # to enable use of OIDC for npm provenance (still good for npm publish via pnpm)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Lerna needs full history to detect changes and version correctly
-          # The GITHUB_TOKEN from permissions should be sufficient for pushing back
-          # If you encounter permission issues for pushing, you might need to explicitly pass it:
-          # token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }} # Ensure this token has write access for pushing back
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*" # Uses the latest LTS Node.js version
-          cache: 'npm' # Caches npm dependencies
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/' # Configures npm for publishing
 
-      - name: Install dependencies
-        # `npm clean-install` is good for CI, ensures a clean node_modules
-        run: npm clean-install
+      - name: Install pnpm
+        # pnpm is not always pre-installed on GitHub Actions runners, so it's good practice to install it.
+        run: npm install -g pnpm
 
-      # Optional: Keep this if you want to verify integrity before building/publishing
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
+      - name: Install dependencies
+        # <--- CHANGED: Use pnpm install for dependency installation
+        # '--frozen-lockfile' is recommended in CI to ensure reproducible builds
+        run: pnpm install --frozen-lockfile
+
+      # --- REMOVED: npm audit signatures ---
+      # pnpm has its own integrity checks built into its lockfile and installation process.
+      # 'npm audit signatures' is specific to npm's provenance feature and doesn't apply directly to pnpm.
+      # If pnpm introduces a similar feature, you'd add its command here.
 
       - name: Build packages
         # This step runs the 'build' script in each of your Lerna-managed packages.
@@ -66,7 +70,7 @@ jobs:
           # 4. Generate/update CHANGELOG.md files (if configured in lerna.json).
           # 5. Create Git commits for the version bumps and push them to your repo.
           # 6. Create Git tags for the new versions and push them.
-          # 7. Publish the updated packages to npm.
+          # 7. Publish the updated packages to npm (Lerna will use pnpm for this if configured).
           # 8. Create GitHub Releases for the new tags (due to --create-release github).
           npx lerna publish --yes --conventional-commits --create-release github
           # --yes: Automatically confirms prompts, essential for non-interactive CI.
