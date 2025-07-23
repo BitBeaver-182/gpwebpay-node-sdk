@@ -1,4 +1,5 @@
 name: Release and Publish
+
 on:
   push:
     branches:
@@ -12,25 +13,62 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+      contents: write # to be able to publish a GitHub release (Lerna needs this to push version commits and tags)
+      issues: write # to be able to comment on released issues (if Lerna's conventional commits/changelog does this)
+      pull-requests: write # to be able to comment on released pull requests (if Lerna's conventional commits/changelog does this)
+      id-token: write # to enable use of OIDC for npm provenance (still good for npm publish)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Lerna needs full history to detect changes and version correctly
+          # The GITHUB_TOKEN from permissions should be sufficient for pushing back
+          # If you encounter permission issues for pushing, you might need to explicitly pass it:
+          # token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: "lts/*" # Uses the latest LTS Node.js version
+          cache: 'npm' # Caches npm dependencies
+          registry-url: 'https://registry.npmjs.org/' # Configures npm for publishing
+
       - name: Install dependencies
+        # `npm clean-install` is good for CI, ensures a clean node_modules
         run: npm clean-install
+
+      # Optional: Keep this if you want to verify integrity before building/publishing
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
-      - name: Release
+
+      - name: Build packages
+        # This step runs the 'build' script in each of your Lerna-managed packages.
+        # Ensure each package's package.json has a "build" script.
+        run: npx lerna run build --stream --sort
+
+      - name: Configure Git User
+        # Lerna will make commits for version bumps and tags, so it needs a Git user configured.
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Lerna Publish
         env:
+          # Lerna uses NODE_AUTH_TOKEN for authenticating with the npm registry.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # GITHUB_TOKEN is used by Lerna for creating GitHub releases and pushing tags.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+        run: |
+          # `lerna publish` will:
+          # 1. Detect which packages have changed since the last release.
+          # 2. Based on your commit messages (due to --conventional-commits), determine the next semantic version.
+          # 3. Update package.json files with the new versions.
+          # 4. Generate/update CHANGELOG.md files (if configured in lerna.json).
+          # 5. Create Git commits for the version bumps and push them to your repo.
+          # 6. Create Git tags for the new versions and push them.
+          # 7. Publish the updated packages to npm.
+          # 8. Create GitHub Releases for the new tags (due to --create-release github).
+          npx lerna publish --yes --conventional-commits --create-release github
+          # --yes: Automatically confirms prompts, essential for non-interactive CI.
+          # --conventional-commits: Enables Lerna's semantic versioning and changelog generation based on commit messages.
+          # --create-release github: Tells Lerna to create a GitHub release for each new version tag.
