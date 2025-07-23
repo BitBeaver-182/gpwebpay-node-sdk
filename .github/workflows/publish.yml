@@ -12,11 +12,16 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: "lts/*"
+
     permissions:
       contents: write # to be able to publish a GitHub release (Lerna needs this to push version commits and tags)
       issues: write # to be able to comment on released issues (if Lerna's conventional commits/changelog does this)
       pull-requests: write # to be able to comment on released pull requests (if Lerna's conventional commits/changelog does this)
       id-token: write # to enable use of OIDC for npm provenance (still good for npm publish via pnpm)
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,18 +29,17 @@ jobs:
           fetch-depth: 0 # Lerna needs full history to detect changes and version correctly
           token: ${{ secrets.GITHUB_TOKEN }} # Ensure this token has write access for pushing back
 
-      - name: Setup Node.js
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: "lts/*" # Uses the latest LTS Node.js version
+          node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-          package-manager: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
           registry-url: 'https://registry.npmjs.org/' # Configures npm for publishing
-
-      - name: Install pnpm
-        # pnpm is not always pre-installed on GitHub Actions runners, so it's good practice to install it.
-        run: npm install -g pnpm
 
       - name: Install dependencies
         # <--- CHANGED: Use pnpm install for dependency installation
