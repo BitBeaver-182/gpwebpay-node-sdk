@@ -63,7 +63,7 @@ jobs:
           # Lerna uses NODE_AUTH_TOKEN for authenticating with the npm registry.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # GITHUB_TOKEN is used by Lerna for creating GitHub releases and pushing tags.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # `lerna publish` will:
           # 1. Detect which packages have changed since the last release.
