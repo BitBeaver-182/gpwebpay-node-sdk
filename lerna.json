@@ -3,6 +3,6 @@
   "version": "independent",
   "npmClient": "pnpm",
   "packages": [
-    "packages/*"
+    "."
   ]
 }
