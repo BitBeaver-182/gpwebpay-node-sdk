@@ -1,6 +1,6 @@
 {
   "name": "gpwebpay-node-sdk",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A TypeScript SDK for interacting with the GP WebPay payment gateway.",
   "author": "Federico Diaz <contact@fdiaz.dev>",
   "license": "MIT",
@@ -35,9 +35,6 @@
     "prepublishOnly": "pnpm build"
   },
   "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
-  "dependencies": {
-    "dotenv": "^16.5.0"
-  },
   "devDependencies": {
     "lerna": "^8.2.3"
   }
